@@ -1,0 +1,12 @@
+-- 用户表
+CREATE TABLE users (
+	ID VARCHAR (64) PRIMARY KEY NOT NULL,
+	mailbox VARCHAR (20) NULL,
+	name VARCHAR (16) NULL,
+	pwd VARCHAR (20) NOT NULL,
+	login_time TIMESTAMP NULL,
+	last_login_time TIMESTAMP NULL,
+	phone VARCHAR (20) NULL
+);
+
+

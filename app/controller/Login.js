@@ -1,8 +1,13 @@
 'use strict';
 
 const Controller = require('egg').Controller;
-var UUID = require('uuid');
+// var UUID = require('uuid');
 const { pool } = require('../pg/index')
+
+var pgSQL = {
+    select_mailbox:'SELECT * FROM users where mailbox = $1',
+    select_name:'SELECT * FROM users where name = $1'
+}
 
 
 class LoginController extends Controller {
@@ -11,22 +16,29 @@ class LoginController extends Controller {
     // 创建账号
     async create() {
         const { ctx } = this;
+        var body = {}
         // var ID = UUID.v1();
         // console.log(ID)
-        
+                // jwt
+        // nodemailer  邮箱
         try {
             const parame = this.ctx.query;
+            console.log(parame)
             
-            
-
-
-            const text = 'SELECT * FROM users';
-            let client = await pool.connect();
-            let res = await client.query(text)
-            // console.log("row", res.rows)
+            // 查询邮箱是否有次账号
+            var client = await pool.connect();
+            var res = await client.query(pgSQL.select_name,[parame.name])
             client.release()
+            if(res.rows.length == 0){
+                console.log("没有此账号")
+            }else{
+                console.log("有此账号")
+            }
+            console.log("row", res.rows)
+
             ctx.body = {
                 status:200,
+                code:0,
                 data: res.rows
             };
             
@@ -34,6 +46,7 @@ class LoginController extends Controller {
             ctx.body = {
                 status:404
             }
+            client.release()
             console.log("err", error)
         }
 

@@ -7,10 +7,16 @@
  */
 module.exports = appInfo => {
   /**
-   * built-in config
+   * 内置的配置
    * @type {Egg.EggAppConfig}
    **/
     const config = exports = {};
+
+    // 开启file模式 接受文件
+    config.multipart = {
+        mode: 'file',
+    };
+
 
     config.security = {
         csrf: {
@@ -24,13 +30,13 @@ module.exports = appInfo => {
         allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH'
     }
 
-  // use for cookie sign key, should change to your own and keep security
+  //使用cookie签名密钥，应更改为您自己的，以确保安全
   config.keys = appInfo.name + '_1605858233950_8678';
 
-  // add your middleware config here
+  // 在这里添加您的中间件配置
   config.middleware = [];
 
-  // add your user config here
+  // 在这里添加您的用户配置
   const userConfig = {
     // myAppName: 'egg',
   };
@@ -40,3 +46,4 @@ module.exports = appInfo => {
     ...userConfig,
   };
 };
+

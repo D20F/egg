@@ -121,18 +121,30 @@ class LoginController extends Controller {
     async upload() {
         const { ctx } = this;
         // 文件对象 ctx.request.files   一个数组文件对象
-        const file = ctx.request.files[0];
-        console.log('ccccccc',file)
+        console.log('ctx',ctx)
 
-        // 获取文件后缀名
-        // let filename = ctx.request.files[0].filename.split('.')[1]
-        let filename = ctx.request.files[0].filename
-        console.log(filename)
-        // 当前文件夹
-        // 读取文件
-        let data = fs.readFileSync(file.filepath)
-        // 写入文件对象 
-        fs.writeFileSync(path.join(__dirname,filename),data)
+
+        // 循环解决多个文件
+        for (const file of ctx.request.files) {
+
+
+            // console.log('field: ' + file.fieldname);
+            // console.log('filename: ' + file.filename);
+            // console.log('encoding: ' + file.encoding);
+            // console.log('mime: ' + file.mime);
+            // console.log('tmp filepath: ' + file.filepath);
+
+            // 读取文件
+            let data = fs.readFileSync(file.filepath)
+            // 写入文件对象 
+            fs.writeFileSync(path.join(__dirname,file.filename),data)
+
+            // 删除文件
+            await fs.unlink(file.filepath);
+
+
+        }
+
 
         ctx.body = {
             status: 404,
@@ -140,27 +152,7 @@ class LoginController extends Controller {
         }
 
     }
-    // async uploads() {
-    //     const { ctx } = this;
-    //     console.log(ctx.request.body);
-    //     console.log('got %d files', ctx.request.files.length);
-    //     for (const file of ctx.request.files) {
-    //       console.log('field: ' + file.fieldname);
-    //       console.log('filename: ' + file.filename);
-    //       console.log('encoding: ' + file.encoding);
-    //       console.log('mime: ' + file.mime);
-    //       console.log('tmp filepath: ' + file.filepath);
-    //       let result;
-    //       try {
-    //         // 处理文件，比如上传到云端
-    //         result = await ctx.oss.put('egg-multipart-test/' + file.filename, file.filepath);
-    //       } finally {
-    //         // 需要删除临时文件
-    //         await fs.unlink(file.filepath);
-    //       }
-    //       console.log(result);
-    //     }
-    //   }
+
 }
 
 module.exports = LoginController;

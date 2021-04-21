@@ -140,7 +140,7 @@ class LoginController extends Controller {
             fs.writeFileSync(path.join(__dirname,file.filename),data)
 
             // 删除文件
-            await fs.unlink(file.filepath);
+            // await fs.unlink(file.filepath);
 
 
         }
